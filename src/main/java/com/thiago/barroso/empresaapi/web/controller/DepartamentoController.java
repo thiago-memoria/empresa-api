@@ -1,11 +1,10 @@
 package com.thiago.barroso.empresaapi.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thiago.barroso.empresaapi.web.domain.Departamento;
 import com.thiago.barroso.empresaapi.web.service.DepartamentoService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/departamentos")
@@ -33,23 +34,15 @@ public class DepartamentoController {
 	}
 	
 	@PostMapping("/salvar")
-	public String salvar(@ModelAttribute Departamento departamento, RedirectAttributes redirectAttributes) {
-	    try {
-	        service.salvar(departamento);
-	        redirectAttributes.addFlashAttribute("success", "Departamento inserido com sucesso.");
-	        return "redirect:/departamentos/cadastrar";  // Sucesso
-	    } catch (DataIntegrityViolationException e) {
-	        // Adiciona a mensagem de erro no modelo
-	    	System.out.println("Erro ao salvar departamento: " + e.getMessage()); 
-	    	// Adiciona a mensagem de erro para ser passada ao redirecionamento
-            redirectAttributes.addFlashAttribute("erro", "Já existe um departamento com esse nome.");
-	    	return "redirect:/departamentos/cadastrar";  // Retorna para a tela de cadastro com erro
-	    } catch (Exception e) {
-	        // Caso ocorra outro erro
-	    	// Adiciona a mensagem de erro para ser passada ao redirecionamento
-            redirectAttributes.addFlashAttribute("erro", "Ocorreu um erro inesperado.");
-	        return "redirect:/departamentos/cadastrar";  // Retorna para a tela de cadastro com erro genérico
-	    }
+	public String salvar(@Valid Departamento departamento, BindingResult result, RedirectAttributes redirectAttributes) {
+
+		if(result.hasErrors()) {
+			return "/departamento/cadastro";
+		}
+		
+		service.salvar(departamento);
+		redirectAttributes.addFlashAttribute("success", "Departamento inserido com sucesso.");
+		return "redirect:/departamentos/cadastrar";
 	}
 	
 	@GetMapping("/editar/{id}")
@@ -59,7 +52,12 @@ public class DepartamentoController {
 	}
 	
 	@PostMapping("/editar")
-	public String editar(Departamento departamento, RedirectAttributes attr) {
+	public String editar(@Valid Departamento departamento, BindingResult result, RedirectAttributes attr) {
+		
+		if(result.hasErrors()) {
+			return "/departamento/cadastro";
+		}
+		
 		service.editar(departamento);
 		attr.addFlashAttribute("success", "Departamento Editado com sucesso.");
 		return "redirect:/departamento/cadastrar";

@@ -21,30 +21,6 @@ public class FuncionarioDaoImpl extends AbstractDao<Funcionario, Long> implement
 	}
 	
 	@Override
-	public void save(Funcionario funcionario) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update(Funcionario funcionaro) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Funcionario findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Funcionario> findByDataEntradaDataSaida(LocalDate entrada, LocalDate saida) {
 		String jpql = new StringBuilder("select f from Funcionario f")
 				.append(" where f.dataEntrada >= ?1 and f.dataSaida <= ?2")
