@@ -1,6 +1,7 @@
 package com.thiago.barroso.empresaapi.web.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.thiago.barroso.empresaapi.web.domain.Cargo;
 import com.thiago.barroso.empresaapi.web.domain.Departamento;
 import com.thiago.barroso.empresaapi.web.service.CargoService;
 import com.thiago.barroso.empresaapi.web.service.DepartamentoService;
+import com.thiago.barroso.empresaapi.web.util.PaginacaoUtil;
 
 import jakarta.validation.Valid;
 
@@ -36,9 +39,20 @@ public class CargoController {
 	}
 	
 	@GetMapping("/listar")
-	public String listar(ModelMap model) {
-		model.addAttribute("cargos", cargoService.buscarTodos());
-		return"/cargo/lista";
+	public String listar(ModelMap model, @RequestParam("page") Optional<Integer> page,
+	        @RequestParam("dir") Optional<String> dir) {
+
+	    int paginaAtual = page.orElse(1);
+	    String ordem = dir.orElse("asc");
+	    System.out.println("Página: " + paginaAtual + ", Ordem: " + ordem); // Adicionando log
+
+	    try {
+	        PaginacaoUtil<Cargo> pageCargo = cargoService.buscarPorPagina(paginaAtual, ordem);
+	        model.addAttribute("pageCargo", pageCargo);
+	    } catch (Exception e) {
+	        e.printStackTrace();  // Logar o erro
+	    }
+	    return "cargo/lista";
 	}
 	
 	@PostMapping("/salvar")

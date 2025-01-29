@@ -3,6 +3,7 @@ package com.thiago.barroso.empresaapi.web.service;
 import java.util.List;
 
 import com.thiago.barroso.empresaapi.web.domain.Cargo;
+import com.thiago.barroso.empresaapi.web.util.PaginacaoUtil;
 
 public interface CargoService {
 	
@@ -18,4 +19,5 @@ public interface CargoService {
 
 	boolean cargoTemFuncionarios(Long id);
 	
+	PaginacaoUtil<Cargo> buscarPorPagina(int pagina, String direcao);
 }

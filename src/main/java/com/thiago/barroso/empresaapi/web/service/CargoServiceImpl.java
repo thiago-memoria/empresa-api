@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.thiago.barroso.empresaapi.web.dao.CargoDao;
 import com.thiago.barroso.empresaapi.web.domain.Cargo;
+import com.thiago.barroso.empresaapi.web.util.PaginacaoUtil;
 
 @Service
 @Transactional(readOnly = false)
@@ -49,6 +50,11 @@ public class CargoServiceImpl implements CargoService{
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public PaginacaoUtil<Cargo> buscarPorPagina(int pagina, String direcao) {
+		return dao.buscaPaginada(pagina, direcao);
 	}
 
 }
