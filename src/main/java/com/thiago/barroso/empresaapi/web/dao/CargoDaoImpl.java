@@ -13,11 +13,22 @@ import jakarta.persistence.EntityNotFoundException;
 @Repository
 public class CargoDaoImpl extends AbstractDao<Cargo, Long> implements CargoDao {
 	
-	public PaginacaoUtil<Cargo> buscaPaginada(int pagina, String direcao){
+	public PaginacaoUtil<Cargo> buscaPaginada(int pagina, String direcao, String coluna){
 		if (!direcao.equals("asc") && !direcao.equals("desc")) {
 		    direcao = "asc";
 		}
-		String queryStr = "select c from Cargo c order by c.nome " + direcao;
+		
+		if (!coluna.equals("nome") && !coluna.equals("departamento")) {
+		    coluna = "nome";
+		}
+	    String queryStr = "select c from Cargo c";
+	    
+	    if (coluna.equals("nome")) {
+	        queryStr += " order by c.nome " + direcao;
+	    } else if (coluna.equals("departamento")) {
+	        queryStr += " order by c.departamento.nome " + direcao;
+	    }
+	    
 		int tamanho = 5;
 		int inicio = (pagina - 1) * tamanho;
 		List<Cargo> cargos = null;
@@ -39,7 +50,7 @@ public class CargoDaoImpl extends AbstractDao<Cargo, Long> implements CargoDao {
 		long totalRegistros = count();
 		long totalDePaginas = (totalRegistros + (tamanho + 1)) / tamanho;
 		
-		return new PaginacaoUtil<Cargo>(tamanho, pagina, totalDePaginas, cargos, direcao);
+		return new PaginacaoUtil<Cargo>(tamanho, pagina, totalDePaginas, cargos, direcao, coluna);
 	}
 	
 	public long count() {

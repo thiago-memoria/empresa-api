@@ -40,14 +40,15 @@ public class CargoController {
 	
 	@GetMapping("/listar")
 	public String listar(ModelMap model, @RequestParam("page") Optional<Integer> page,
-	        @RequestParam("dir") Optional<String> dir) {
+	        @RequestParam("dir") Optional<String> dir, @RequestParam("col") Optional<String> col) {
 
 	    int paginaAtual = page.orElse(1);
 	    String ordem = dir.orElse("asc");
+	    String coluna= col.orElse("nome");
 	    System.out.println("Página: " + paginaAtual + ", Ordem: " + ordem); // Adicionando log
 
 	    try {
-	        PaginacaoUtil<Cargo> pageCargo = cargoService.buscarPorPagina(paginaAtual, ordem);
+	        PaginacaoUtil<Cargo> pageCargo = cargoService.buscarPorPagina(paginaAtual, ordem, coluna);
 	        model.addAttribute("pageCargo", pageCargo);
 	    } catch (Exception e) {
 	        e.printStackTrace();  // Logar o erro

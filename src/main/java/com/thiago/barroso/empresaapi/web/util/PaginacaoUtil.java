@@ -9,14 +9,16 @@ public class PaginacaoUtil<T> {
 	private Long totalDePaginas;
 	private List<T> registros;
 	private String direcao;
+	private String coluna;
 	
-	public PaginacaoUtil(int tamanho, int pagina, Long totalDePaginas, List<T> registros, String direcao) {
+	public PaginacaoUtil(int tamanho, int pagina, Long totalDePaginas, List<T> registros, String direcao, String coluna) {
 		super();
 		this.tamanho = tamanho;
 		this.pagina = pagina;
 		this.totalDePaginas = totalDePaginas;
 		this.registros = registros;
 		this.direcao = direcao;
+		this.coluna = coluna;
 	}
 
 	public int getTamanho() {
@@ -31,8 +33,8 @@ public class PaginacaoUtil<T> {
 		return direcao;
 	}
 
-	public void setDirecao(String direcao) {
-		this.direcao = direcao;
+	public String getColuna() {
+		return coluna;
 	}
 
 	public Long getTotalDePaginas() {
@@ -42,5 +44,4 @@ public class PaginacaoUtil<T> {
 	public List<T> getRegistros() {
 		return registros;
 	}
-	
 }
